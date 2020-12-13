@@ -1,0 +1,21 @@
+{
+    "name": "parveen-sangroya/yii2-detailview",
+    "description": "Enhanced the DetailView widget of yii2 framework using bootstrap classes",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension"," detail view"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Parveen Sangroya",
+            "email": "parveen0013@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "~2.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "parveen\\": ""
+        }
+    }
+}
