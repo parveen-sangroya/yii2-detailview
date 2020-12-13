@@ -1,5 +1,5 @@
 {
-    "name": "parveen-sangroya/yii2-detailview",
+    "name": "sangroya/yii2-detailview",
     "description": "Enhanced the DetailView widget of yii2 framework using bootstrap classes",
     "type": "yii2-extension",
     "keywords": ["yii2","extension"," detail view"],
