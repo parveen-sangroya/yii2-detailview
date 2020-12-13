@@ -6,7 +6,7 @@
  * @version   1.0
  */
 
-namespace parveen;
+namespace sangroya;
 
 use Yii;
 use yii\base\Arrayable;
