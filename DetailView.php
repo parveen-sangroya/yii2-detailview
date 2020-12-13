@@ -108,7 +108,7 @@ class DetailView extends YiiDetailView
      */
     //public $template = '<tr><th{captionOptions}>{label}</th><td{contentOptions}>{value}</td></tr>';
     public $template = '<div class="{defaultColumn}"><div class="form-group"> <label {captionOptions}>{label}</label><div {contentOptions}>{value}</div></div></div>';
-   
+
     /**
      * @var array the HTML attributes for the container tag of this widget. The `tag` option specifies
      * what container tag should be used. It defaults to `table` if not set.
@@ -152,15 +152,15 @@ class DetailView extends YiiDetailView
         if (!isset($this->options['id'])) {
             $this->options['id'] = $this->getId();
         }
-       
+
         if(!isset($this->model[$this->primaryKey]))
         {
             throw new InvalidConfigException('Please set primaryKey property, as id is not the primary key for this model');
         }
-       
-        
+
+
         $this->reArrange();
-       
+
     }
     public function reArrange(){
         $attributes=[];
@@ -180,10 +180,10 @@ class DetailView extends YiiDetailView
     {
         $rows = [];
         $i = 0;
-       
+
         foreach ($this->attributes as $attribute) {
            $rows[] = $this->renderAttribute($attribute, $i++);
-           
+
         }
         $actions="";
         if($this->action){
@@ -191,21 +191,28 @@ class DetailView extends YiiDetailView
         if(isset($this->action['buttons'])){
             foreach($this->action['buttons'] as $key=>$button){
                 $actions=strtr($actions,[
-                   "{".$key."}"=>$button 
+                   "{".$key."}"=>$button
                     ]);
             }
         }
        $actions= strtr($actions, [
             '{back}' =>  Html::a(Yii::t('app','Back'), ['index'], ['class' => 'back']),
-            '{update}' => $this->role ? (\Yii::$app->user->can('update'.ucfirst($this->role)) ? Html::a(Yii::t('app','Update'), ['update', 'id' => $this->model->{$this->primaryKey}], ['class' => 'edit']) :''):'',
+            '{update}' => $this->role ?
+            (\Yii::$app->user->can('update'.ucfirst($this->role)) ? Html::a(Yii::t('app','Update'), ['update', 'id' => $this->model->{$this->primaryKey}], ['class' => 'edit']) :'') : Html::a(Yii::t('app','Update'), ['update', 'id' => $this->model->{$this->primaryKey}], ['class' => 'edit']),
             '{delete}' => $this->role ? (\Yii::$app->user->can('delete'.ucfirst($this->role)) ? Html::a(Yii::t('app','Delete'), ['delete', 'id' => $this->model->{$this->primaryKey}], [
                 'class' => 'delete',
                 'data' => [
                     'confirm' => Yii::t('app','Are you sure you want to delete this '.$this->itemName.'?'),
                     'method' => 'post',
                 ],
-                ]) :''):'',
-           
+                ]) :''): Html::a(Yii::t('app','Delete'), ['delete', 'id' => $this->model->{$this->primaryKey}], [
+                    'class' => 'delete',
+                    'data' => [
+                        'confirm' => Yii::t('app','Are you sure you want to delete this '.$this->itemName.'?'),
+                        'method' => 'post',
+                    ],
+                    ]),
+
         ]);
         }
         $header='';
@@ -217,7 +224,7 @@ class DetailView extends YiiDetailView
        $bodyOptions=[];
         $body=Html::tag($tag, implode("\n",$rows),$bodyOptions );
         echo Html::tag($tag, $header.$body, $options);
-        
+
     }
 
     /**
@@ -234,14 +241,14 @@ class DetailView extends YiiDetailView
                 $label = ArrayHelper::getValue($attribute, 'label', '');
                 $groupOptions['class']='infotitle-header mb-0';
                 $content=Html::tag('div', $label, $groupOptions);
-                
+
                 if(isset($attribute['defaultGroup']) && $attribute['defaultGroup'] && $index==0)
                 $content='';
                 $contentBody='';
                 $i=0;
-                
-                
-                
+
+
+
                 foreach($attribute['columns'] as $column){
                     if(isset($attribute['class']))
                     $column['class']=$attribute['class'];
@@ -249,7 +256,7 @@ class DetailView extends YiiDetailView
                 }
                 return $content. Html::tag('div', Html::tag('div', $contentBody,['class'=>'row']), ['class'=>'mycard-body']);
             }
-            
+
         }else if (is_string($this->template)) {
             $defaultClass="view-data";
             if((is_array($attribute['format']) && ($attribute["format"][0]=="image")) || ($attribute["format"]=="image")){
@@ -289,7 +296,7 @@ class DetailView extends YiiDetailView
         }
         $group=-1;
         foreach ($this->attributes as $i => $attribute) {
-          
+
             if (is_string($attribute)) {
                 if (!preg_match('/^([^:]+)(:(\w*))?(:(.*))?$/', $attribute, $matches)) {
                     throw new InvalidConfigException('The attribute must be specified in the format of "attribute", "attribute:format" or "attribute:format:label"');
@@ -316,7 +323,7 @@ class DetailView extends YiiDetailView
 
             if(!isset($attribute['group'])  && $i==0){
                 $group=0;
-            
+
                 $attribute['group']=true;
                 $attribute['defaultGroup']=true;
             }
@@ -328,7 +335,7 @@ class DetailView extends YiiDetailView
                 if (!array_key_exists('value', $attribute)) {
                     $attribute['value'] = ArrayHelper::getValue($this->model, $attributeName);
                 }
-            } 
+            }
             else if(isset($attribute['group']) && $attribute['group']==true){
                 if (!isset($attribute['label'])) {
                     throw new InvalidConfigException('The attribute configuration requires the "label" must be supplied to determine the display label.');
@@ -346,19 +353,19 @@ class DetailView extends YiiDetailView
             // if($i==1){echo $group;
             //     echo ($group!=-1&& $i!=$group);
             //     die;}
-         
+
           if($group!=-1 && $i!=$group)
-           { 
-           
+           {
+
                unset($this->attributes[$i]);
 
                $this->attributes[(int)$group]['columns'][] = $attribute;
-              
-            
-               
+
+
+
            }
            else if($i==0 && isset($attribute['defaultGroup']) && $attribute['defaultGroup']){
-           
+
            unset($this->attributes[$i]);
            $headerGroup=$attribute;
            unset($headerGroup['class']);
@@ -366,13 +373,13 @@ class DetailView extends YiiDetailView
           unset($attribute['group']);
           unset($attribute['defaultGroup']);
           $this->attributes[(int)$group]['columns'][] = $attribute;
-       
-           
+
+
            }
             else
             $this->attributes[(int)$i] = $attribute;
-           
+
         }
-     
+
     }
 }
